@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weatherly - Weather Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom scrollbar for the city list */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e253f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #b59fea;
+      border-radius: 10px;
+    }
+
+    /* Scroll horizontal day cards */
+    #dayCards {
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #b59fea #1e253f;
+    }
+
+    /* Hide default input clear button */
+    input[type="search"]::-webkit-search-cancel-button {
+      -webkit-appearance:none;
+    }
+    
+    /* Search input focus */
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #fbb6ce;
+    }
+  </style>
+</head>
+<body class="bg-[#121727] text-pink-200 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="bg-[#252d57] w-48 flex flex-col justify-between px-6 py-8 text-sm">
+    <div>
+      <div class="flex items-center gap-2 mb-10">
+        <div class="text-3xl text-pink-300">☂️</div>
+        <h1 class="font-semibold text-lg text-pink-300">Weatherly</h1>
+      </div>
+      <nav class="flex flex-col gap-4 text-pink-300">
+        <a href="#" class="border-l-2 border-pink-400 pl-2 text-pink-300">Home</a>
+        <a href="#" class="hover:text-pink-400 transition-colors">Blogs</a>
+        <a href="#" class="hover:text-pink-400 transition-colors">Map</a>
+        <a href="#" class="hover:text-pink-400 transition-colors">Photos</a>
+        <a href="#" class="hover:text-pink-400 transition-colors">Videos</a>
+        <a href="#" class="hover:text-pink-400 transition-colors">Phone</a>
+      </nav>
+    </div>
+    <div>
+      <button class="text-pink-400 hover:text-pink-300 text-sm">Log out</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-8 py-8 flex flex-col gap-8">
+
+    <!-- Search bar -->
+    <form id="searchForm" class="flex gap-3 max-w-3xl mx-auto">
+      <input 
+        id="cityInput" 
+        type="search" 
+        name="city" 
+        placeholder="Search for city..." 
+        aria-label="Search for city"
+        class="flex-grow rounded-md bg-[#121727] border border-transparent focus:border-pink-300 text-pink-200 px-5 py-3 placeholder:text-pink-500 transition"/>
+      <button type="submit" aria-label="Search" class="bg-pink-300 text-[#121727] p-3 rounded-md flex items-center justify-center hover:bg-pink-400 transition">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"  class="feather feather-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </form>
+
+    <!-- Weather dashboard container -->
+    <section class="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto w-full">
+
+      <!-- Main city weather card -->
+      <article class="bg-[#1e253f] rounded-xl p-8 flex flex-col items-center min-w-[260px] md:min-w-[320px] shadow-lg">
+        <h2 class="text-pink-300 font-semibold text-xl mb-1" id="mainCityName">London, UK</h2>
+        <p class="text-pink-400 capitalize mb-3" id="mainWeatherDesc">party cloud</p>
+        <p class="text-6xl font-extrabold text-purple-300 mb-6" id="mainTemp">28°</p>
+        <img 
+          src="https://placehold.co/150x150/png?text=Weather+Icon" 
+          alt="A stylized weather icon depicting current weather condition for the main city" 
+          id="mainWeatherIcon"
+          class="mb-2"
+          onerror="this.onerror=null;this.src='https://placehold.co/150x150/png?text=No+Image';"
+        />
+      </article>
+
+      <!-- Day Temperature and Wind Cards -->
+      <div id="dayCards" class="flex gap-6 flex-nowrap md:flex-wrap md:max-w-lg">
+        <div class="bg-[#2a3151] rounded-xl p-4 min-w-[110px] mb-4 text-center">
+          <p class="text-pink-300 text-sm mb-1" id="day1Date">Saturday<br/>Sun</p>
+          <p class="text-purple-300 font-semibold text-xl" id="day1Temp">12°</p>
+          <p class="text-pink-300 text-xs mt-3" id="day1Label">Day Temp</p>
+        </div>
+        <div class="bg-[#2a3151] rounded-xl p-4 min-w-[110px] mb-4 text-center">
+          <p class="text-pink-300 text-sm mb-1" id="day2Date">Saturday<br/>Wind</p>
+          <p class="text-purple-300 font-semibold text-xl" id="day2Temp">16°</p>
+          <p class="text-pink-300 text-xs mt-3" id="day2Label">Wind</p>
+        </div>
+      </div>
+
+      <!-- Weather Info Grid -->
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-6 flex-grow max-w-4xl mx-auto md:mx-0" style="min-width: 320px;">
+        <div class="bg-[#2a3151] rounded-xl p-4 flex flex-col items-center">
+          <p class="text-pink-300 text-xs mb-1">Feel Like</p>
+          <p class="text-yellow-400 font-bold text-2xl" id="feelLikeTemp">7°</p>
+        </div>
+        <div class="bg-[#2a3151] rounded-xl p-4 flex flex-col items-center">
+          <p class="text-pink-300 text-xs mb-1">Cloud</p>
+          <p class="text-yellow-400 font-bold text-2xl" id="cloudPercent">8%</p>
+        </div>
+        <div class="bg-[#2a3151] rounded-xl p-4 flex flex-col items-center">
+          <p class="text-pink-300 text-xs mb-1">Rain</p>
+          <p class="text-yellow-400 font-bold text-2xl" id="rainPercent">2°</p>
+        </div>
+        <div class="bg-[#2a3151] rounded-xl p-4 flex flex-col items-center">
+          <p class="text-pink-300 text-xs mb-1">Humidity</p>
+          <p class="text-yellow-400 font-bold text-2xl" id="humidityPercent">65%</p>
+        </div>
+        <div class="bg-[#2a3151] rounded-xl p-4 flex flex-col items-center">
+          <p class="text-pink-300 text-xs mb-1">Ultraviolet</p>
+          <p class="text-yellow-400 font-bold text-2xl" id="uvIndex">7</p>
+        </div>
+        <div class="bg-[#2a3151] rounded-xl p-4 flex flex-col items-center">
+          <p class="text-pink-300 text-xs mb-1">Cloudy</p>
+          <p class="text-yellow-400 font-bold text-2xl" id="windSpeed">26 km/h</p>
+        </div>
+      </div>
+
+      <!-- Other Cities sidebar -->
+      <aside class="bg-[#1e253f] rounded-xl p-4 min-w-[220px]">
+        <h3 class="font-semibold mb-4 text-pink-300">Other Cities</h3>
+        <ul id="otherCities" class="flex flex-col gap-3 text-pink-400 text-sm">
+          <li class="flex justify-between bg-[#252d57] rounded-md px-3 py-2 hover:bg-pink-900 cursor-pointer transition">
+            <span>Manchester</span>
+            <span class="text-yellow-400 font-semibold">7°</span>
+          </li>
+          <li class="flex justify-between bg-[#252d57] rounded-md px-3 py-2 hover:bg-pink-900 cursor-pointer transition">
+            <span>Edinburgh</span>
+            <span class="text-yellow-400 font-semibold">19°</span>
+          </li>
+          <li class="flex justify-between bg-[#252d57] rounded-md px-3 py-2 hover:bg-pink-900 cursor-pointer transition">
+            <span>Bristol</span>
+            <span class="text-yellow-400 font-semibold">22°</span>
+          </li>
+          <li class="flex justify-between bg-[#252d57] rounded-md px-3 py-2 hover:bg-pink-900 cursor-pointer transition">
+            <span>York</span>
+            <span class="text-yellow-400 font-semibold">20°</span>
+          </li>
+        </ul>
+        <a href="#" class="text-pink-400 mt-4 inline-block underline hover:text-pink-300 text-xs">See More →</a>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    // Example: Basic local data setup for dynamic update demonstration
+    // This can be later connected to a real weather API for dynamic results
+    const weatherData = {
+      "London, UK": {
+        description: "party cloud",
+        temp: 28,
+        icon: "https://placehold.co/150x150/png?text=Cloud+Icon",
+        day1: { date: "Saturday\nSun", temp: "12°", label: "Day Temp" },
+        day2: { date: "Saturday\nWind", temp: "16°", label: "Wind" },
+        feelLike: 7,
+        cloudPercent: "8%",
+        rainPercent: "2°",
+        humidityPercent: "65%",
+        uvIndex: 7,
+        windSpeed: "26 km/h"
+      },
+      Manchester: 7,
+      Edinburgh: 19,
+      Bristol: 22,
+      York: 20
+    };
+
+    const mainCityName = document.getElementById("mainCityName");
+    const mainWeatherDesc = document.getElementById("mainWeatherDesc");
+    const mainTemp = document.getElementById("mainTemp");
+    const mainWeatherIcon = document.getElementById("mainWeatherIcon");
+    const day1Date = document.getElementById("day1Date");
+    const day1Temp = document.getElementById("day1Temp");
+    const day1Label = document.getElementById("day1Label");
+    const day2Date = document.getElementById("day2Date");
+    const day2Temp = document.getElementById("day2Temp");
+    const day2Label = document.getElementById("day2Label");
+    const feelLikeTemp = document.getElementById("feelLikeTemp");
+    const cloudPercent = document.getElementById("cloudPercent");
+    const rainPercent = document.getElementById("rainPercent");
+    const humidityPercent = document.getElementById("humidityPercent");
+    const uvIndex = document.getElementById("uvIndex");
+    const windSpeed = document.getElementById("windSpeed");
+
+    function updateMainCityWeather(city) {
+      if (!weatherData[city]) return;
+      const data = weatherData[city];
+      if(typeof data === 'number') return; // ignore simple temp other city entries here
+
+      mainCityName.textContent = city;
+      mainWeatherDesc.textContent = data.description;
+      mainTemp.textContent = data.temp + "°";
+      mainWeatherIcon.src = data.icon;
+      mainWeatherIcon.alt = `Weather icon for ${city} showing "${data.description}" conditions`;
+
+      day1Date.textContent = data.day1.date;
+      day1Temp.textContent = data.day1.temp;
+      day1Label.textContent = data.day1.label;
+
+      day2Date.textContent = data.day2.date;
+      day2Temp.textContent = data.day2.temp;
+      day2Label.textContent = data.day2.label;
+
+      feelLikeTemp.textContent = data.feelLike + "°";
+      cloudPercent.textContent = data.cloudPercent;
+      rainPercent.textContent = data.rainPercent;
+      humidityPercent.textContent = data.humidityPercent;
+      uvIndex.textContent = data.uvIndex;
+      windSpeed.textContent = data.windSpeed;
+    }
+
+    // Initial load
+    updateMainCityWeather("London, UK");
+
+    // Event listener on other cities to update main weather card (demo)
+    document.querySelectorAll("#otherCities li").forEach(li => {
+      li.addEventListener("click", () => {
+        const city = li.textContent.trim().replace(/\d+°/, "").trim();
+        if(weatherData[city]) {
+          updateMainCityWeather(city);
+        } else {
+          alert("Weather data for " + city + " is not implemented in this demo.");
+        }
+      });
+    });
+
+    // Search form submit demo
+    document.getElementById("searchForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const city = e.target.city.value.trim();
+      if (!city) return;
+      if (weatherData[city]) {
+        updateMainCityWeather(city);
+      } else {
+        alert(`No weather data available for "${city}". Try London, Manchester, Edinburgh, Bristol, or York.`);
+      }
+      e.target.city.value = "";
+    });
+  </script>
+</body>
+</html>
+
